@@ -50,8 +50,13 @@ def flatten(d, parent_key=''):
         if isinstance(v, collections.MutableMapping):
             items.extend(flatten(v, new_key).items())
         elif type(v) == list:
-            if isinstance(v[0], collections.MutableMapping):
-                items.extend(flatten(v[0], new_key).items())
+            new_list_key = new_key + '_'
+            for i, lv in enumerate(v):
+                print i, lv
+                if isinstance(lv, collections.MutableMapping):
+                    items.extend(flatten(lv, new_list_key).items())
+                else:
+                    items.append((new_list_key + lv.keys(), lv.items()))
         else:
             items.append((new_key, v))
     return dict(items)
@@ -60,15 +65,16 @@ def flatten(d, parent_key=''):
 y = test_parse.linked_parse('http://www.linkedin.com/in/katieferris')
 y = y['hresume'][0]
 
-for v in iter(y['affiliation']):
-    print v
+# for i, v in enumerate(y['affiliation']):
+#     print i, v
+
 
 # for k, v in y.iteritems():
 #     print k, v
 
-# z = flatten(y)
+z = flatten(y)
 
-# for k, v in z.iteritems():
-#     print k, v
+for k, v in z.iteritems():
+    print k, v
 
 # print z.viewvalues()
