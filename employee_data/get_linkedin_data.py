@@ -1,80 +1,84 @@
 import test_parse
-import collections
+import simply_measured
+import climate_corp
+import redfin
+import random_people
 
+import re
 
-simply_measured_people = [
-    'Adam Schoenfeld',
-    'Damon Cortesi',
-    'Otis Kimzey',
-    'Lauren Berry',
-    'Katie Ferris',
-    'Heather Dooley',
-    'Colin Henry',
-    'Nathan Smitha',
-    'Daniel Worthington',
-    'Chris Castle',
-    'Jon Culver',
-    'Gino Valente',
-    'Annette Auger',
-    'Brian McGehee',
-    'Meagan Johnston'
+my_url = ['http://www.linkedin.com/in/dleen']
+
+company_urls = [
+    my_url,
+    simply_measured.simply_measured_urls,
+    climate_corp.climate_corp_urls,
+    redfin.redfin_urls,
+    random_people.random_urls
 ]
 
-simply_measured_urls = [
-    'http://www.linkedin.com/in/adamschoenfeld',
-    'http://www.linkedin.com/in/dacort',
-    'http://www.linkedin.com/in/otiskimzey',
-    'http://www.linkedin.com/in/alaurenberry',
-    'http://www.linkedin.com/in/katieferris',
-    'http://www.linkedin.com/in/heatherdooley',
-    'http://www.linkedin.com/in/jchenry',
-    'http://www.linkedin.com/in/nathansmitha',
-    'http://www.linkedin.com/in/halffullheart',
-    'http://www.linkedin.com/in/crcastle',
-    'http://www.linkedin.com/in/jonculver',
-    'http://www.linkedin.com/in/ginovalente',
-    'http://www.linkedin.com/in/annetteauger',
-    'http://www.linkedin.com/in/brianmcgehee',
-    'http://www.linkedin.com/in/mjohnston'
-]
 
-# for n, u in zip(simply_measured_people, simply_measured_urls):
-#     print n
-#     print test_parse.linked_parse(u)
-
-
-def flatten(d, parent_key=''):
+def user_items(d):
     items = []
-    for k, v in d.items():
-        new_key = parent_key + '_' + k if parent_key else k
-        if isinstance(v, collections.MutableMapping):
-            items.extend(flatten(v, new_key).items())
-        elif type(v) == list:
-            new_list_key = new_key + '_'
-            for i, lv in enumerate(v):
-                print i, lv
-                if isinstance(lv, collections.MutableMapping):
-                    items.extend(flatten(lv, new_list_key).items())
-                else:
-                    items.append((new_list_key + lv.keys(), lv.items()))
-        else:
-            items.append((new_key, v))
-    return dict(items)
+    if isinstance(d, dict):
+        for _, v in d.iteritems():
+            items.extend(user_items(v))
+    elif isinstance(d, list):
+        for v in d:
+            items.extend(user_items(v))
+    elif isinstance(d, basestring):
+        items.extend(re.findall('\w{3}\w+', d))
+    else:
+        print type(d), d
+
+    items = [x.lower() for x in items]
+    return items
 
 
-y = test_parse.linked_parse('http://www.linkedin.com/in/katieferris')
-y = y['hresume'][0]
+def write_linkedin_data(f_out, id, urls):
+    for u in urls:
+        print u
+        user_page = test_parse.linked_parse(u)
+        user_page = user_page['hresume'][0]
+        user_features = user_items(user_page)
+        user_string = ' '.join(user_features)
 
-# for i, v in enumerate(y['affiliation']):
-#     print i, v
+        f_out.write('%d %s\n' % (id, user_string))
 
 
-# for k, v in y.iteritems():
-#     print k, v
+f = open('people.txt', 'w')
 
-z = flatten(y)
+for i, u in enumerate(company_urls, start=0):
+    write_linkedin_data(f, i, u)
 
-for k, v in z.iteritems():
-    print k, v
+f.close()
 
-# print z.viewvalues()
+
+# for n, u in zip(simply_measured.simply_measured_people,
+#                 simply_measured.simply_measured_urls):
+#     print u
+#     user_page = test_parse.linked_parse(u)
+#     user_page = user_page['hresume'][0]
+#     user_features = user_items(user_page)
+#     user_string = ' '.join(user_features)
+
+#     f.write('%d %s\n' % (1, user_string))
+
+# for n, u in zip(climate_corp.climate_corp_people,
+#                 climate_corp.climate_corp_urls):
+#     print u
+#     user_page = test_parse.linked_parse(u)
+#     user_page = user_page['hresume'][0]
+#     user_features = user_items(user_page)
+#     user_string = ' '.join(user_features)
+
+#     f.write('%d %s\n' % (2, user_string))
+
+# for u in random_people.random_urls:
+#     print u
+#     user_page = test_parse.linked_parse(u)
+#     user_page = user_page['hresume'][0]
+#     user_features = user_items(user_page)
+#     user_string = ' '.join(user_features)
+
+#     f.write('%d %s\n' % (0, user_string))
+
