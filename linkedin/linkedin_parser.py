@@ -7,7 +7,6 @@ As an example, the main program of this script parses an hResume from
 given URL.
 """
 
-import pprint
 import re
 import urllib
 import urllib2
