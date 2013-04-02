@@ -50,7 +50,6 @@ random_urls = [
     'http://www.linkedin.com/in/vidyasantosh',
     'http://www.linkedin.com/in/apokon',
     'http://www.linkedin.com/in/popetammy',
-    'http://www.linkedin.com/in/langari',
     'http://www.linkedin.com/in/gregbettinelli',
     'http://www.linkedin.com/in/halriley',
     'http://www.linkedin.com/in/vaksambath',
