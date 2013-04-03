@@ -13,7 +13,6 @@ energysavvy_people = [
     'Benson Kalahar',
     'Jeffrey Soplop',
     'Dan Zasloff',
-    'Ben Srour',
     'Mark Ghazal',
     'Leo Shklovskii'
 ]
@@ -33,7 +32,6 @@ energysavvy_urls = [
     'http://www.linkedin.com/in/bensonk',
     'http://www.linkedin.com/in/jeffsoplop',
     'http://www.linkedin.com/in/zasloff',
-    'http://www.linkedin.com/in/bensrour',
     'http://www.linkedin.com/in/markghazal',
     'http://www.linkedin.com/in/leoshklovskii/'
 ]

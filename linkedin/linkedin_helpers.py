@@ -25,6 +25,8 @@ def write_linkedin_data(f_out, id, urls):
         user_page = lp.linked_parse(u)
         user_page = user_page['hresume'][0]
         user_features = user_items(user_page)
+        user_features = \
+            [x for x in user_features if len(x) < 20]
         user_string = ' '.join(user_features)
 
         f_out.write('%d %s\n' % (id, user_string))
